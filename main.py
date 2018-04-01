@@ -1,6 +1,6 @@
 from graphics import *
 import math
-
+import time
 
 class Konna:
     def __init__(self, window_dim_x=640, window_dim_y=480):
@@ -51,8 +51,8 @@ class Konna:
 
             draw_start_pos = self.position
 
-            self.pos_x = pos_x_old + int(math.sin(math.radians(self.orientation)) * distance)
-            self.pos_y = pos_y_old + int(math.cos(math.radians(self.orientation)) * distance)
+            self.pos_x = pos_x_old + round(math.sin(math.radians(self.orientation)) * distance, 0)
+            self.pos_y = pos_y_old + round(math.cos(math.radians(self.orientation)) * distance, 0)
 
             draw_end_pos = self.position
 
@@ -61,14 +61,16 @@ class Konna:
             line.draw(self.window)
 
         else:
-            self.pos_x += int(math.sin(math.radians(self.orientation)) * distance)
-            self.pos_y -= int(math.cos(math.radians(self.orientation)) * distance)
+            self.pos_x += round(math.sin(math.radians(self.orientation)) * distance, 0)
+            self.pos_y -= round(math.cos(math.radians(self.orientation)) * distance, 0)
         self.drawSelf()
         self.update()
 
     @property
     def circle(self):
-        return Circle(self.position, 5)
+        cir = Circle(self.position, 5)
+        cir.setFill('black')
+        return cir
 
     @property
     def position(self):
@@ -124,20 +126,18 @@ a = Konna()
 
 a.penDown()
 
-a.orientation = 12
-a.move(100)
-# a.drawSelf()
+a.orientation = 0
 
-a.clearCircles()
-a.update()
-
-# a.drawSelf()
+i = 0
 
 while True:
-    try:
-        pass
-    except KeyBoardInterrupt:
-        break
+    i += 1
+    a.orientation += 2 * i
 
+    a.move(10)
 
-# print(a.pos_x, a.pos_y)
+    time.sleep(0.05)
+
+    # a.update()
+
+    # a.drawSelf()
