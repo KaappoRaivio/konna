@@ -13,17 +13,27 @@ class Konna:
 
         self.pen_down = False
 
-        self.window = GraphWin('Konna', window_dim_x, window_dim_y)
+        self.window = GraphWin('Konna', window_dim_x, window_dim_y, autoflush=False)
 
         self.__window_dim_x = window_dim_x
         self.__window_dim_y = window_dim_y
 
         self.drawSelf()
 
+        # self.circle = Circle(self.position, 5)
+
     def drawSelf(self):
-        circle = Circle(self.position, 5)
-        circle.setFill('black')
-        circle.draw(self.window)
+        self.clearCircles()
+        self.circle.draw(self.window)
+        self.update()
+
+    def clearCircles(self):
+        for i in self.window.items[:]:
+            if isinstance(i, Circle):
+                i.undraw()
+
+    def update(self):
+        self.window.update()
 
     def penDown(self):
         self.pen_down = True
@@ -35,10 +45,30 @@ class Konna:
         self.orientation += amount
 
     def move(self, distance):
-        print(self.pos_x)
-        print(self.pos_y)
-        self.pos_x += int(math.sin(math.radians(self.orientation)) * distance)
-        self.pos_y -= int(math.cos(math.radians(self.orientation)) * distance)
+        if self.pen_down:
+            pos_x_old = self.pos_x
+            pos_y_old = self.pos_y
+
+            draw_start_pos = self.position
+
+            self.pos_x = pos_x_old + int(math.sin(math.radians(self.orientation)) * distance)
+            self.pos_y = pos_y_old + int(math.cos(math.radians(self.orientation)) * distance)
+
+            draw_end_pos = self.position
+
+            line = Line(draw_start_pos, draw_end_pos)
+            line.setWidth(self.__line_width)
+            line.draw(self.window)
+
+        else:
+            self.pos_x += int(math.sin(math.radians(self.orientation)) * distance)
+            self.pos_y -= int(math.cos(math.radians(self.orientation)) * distance)
+        self.drawSelf()
+        self.update()
+
+    @property
+    def circle(self):
+        return Circle(self.position, 5)
 
     @property
     def position(self):
@@ -92,11 +122,14 @@ class Konna:
 
 a = Konna()
 
-a.pos_x = 0
-a.pos_y = 0
+a.penDown()
 
 a.orientation = 12
 a.move(100)
+# a.drawSelf()
+
+a.clearCircles()
+a.update()
 
 # a.drawSelf()
 
@@ -107,4 +140,4 @@ while True:
         break
 
 
-print(a.pos_x, a.pos_y)
+# print(a.pos_x, a.pos_y)
