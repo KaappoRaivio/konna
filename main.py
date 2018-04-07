@@ -2,7 +2,7 @@ import math
 import konna
 from graphics import Point, Rectangle
 
-a = konna.Konna(no_bounds=True, framerate=10, window_dim_x=1000, window_dim_y=1000)
+a = konna.Konna(no_bounds=False, framerate=10000, window_dim_x=1000, window_dim_y=1000)
 
 # print(a.__framerate, 'asd')
 
@@ -26,18 +26,18 @@ span = 500
 
 while KeyboardInterrupt:
     i += 1
-    a.orientation += 29
+    a.orientation += 89
 
     # a.line_color = värit[i % len(värit)]
 
     a.move(i)
 
-    # for c in range(len(värit)):
-    #     if (c - 1) * span < c * (i % span) < c * span:
-    #         a.line_color = värit[c]
+    for c in range(len(värit)):
+        if (c - 1) * span < c * (i % span) < c * span:
+            a.line_color = värit[c]
 
-    if i % 4 == 0:
-        a.jump(10, 10)
-
-    if i % 3 == 0:
-        a.jump(-10, -10)
+    # if i % 4 == 0:
+    #     a.jump(10, 10)
+    #
+    # if i % 3 == 0:
+    #     a.jump(-10, -10)

@@ -63,6 +63,7 @@ class Konna:
 
             line = Line(draw_start_pos, draw_end_pos)
             line.setWidth(self.__line_width)
+            line.setFill(self.line_color)
             line.draw(self.window)
 
         else:
