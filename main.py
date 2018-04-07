@@ -2,7 +2,7 @@ import math
 import konna
 from graphics import Point, Rectangle
 
-a = konna.Konna(no_bounds=True, framerate=100, window_dim_x=1000, window_dim_y=1000)
+a = konna.Konna(no_bounds=True, framerate=10, window_dim_x=1000, window_dim_y=1000)
 
 # print(a.__framerate, 'asd')
 
