@@ -4,7 +4,7 @@ import time
 
 
 class Konna:
-    def __init__(self, window_dim_x=640, window_dim_y=480, no_bounds=False, framerate=1000, update_interval=1000):
+    def __init__(self, window_dim_x=640, window_dim_y=480, no_bounds=False, framerate=1000, update_interval=1000, show_circle=True):
         self.line_color = 'black'
         self.__line_width = 1
         self.__orientation = 0
@@ -23,16 +23,18 @@ class Konna:
 
         self.framerate = framerate
 
-        self.drawSelf()
 
         self.update_interval = update_interval
         self.counter = 0
+        self.show_circle = show_circle
 
+        self.drawSelf()
         # self.circle = Circle(self.position, 5)
 
     def drawSelf(self):
-        self.__clearCircles()
-        self.circle.draw(self.window)
+        if self.show_circle:
+            self.__clearCircles()
+            self.circle.draw(self.window)
         # self.update()
 
     def __clearCircles(self):
