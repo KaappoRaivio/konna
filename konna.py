@@ -2,8 +2,9 @@ from graphics import *
 import math
 import time
 
+
 class Konna:
-    def __init__(self, window_dim_x=640, window_dim_y=480, no_bounds=False, framerate=1000):
+    def __init__(self, window_dim_x=640, window_dim_y=480, no_bounds=False, framerate=1000, update_interval=1000):
         self.line_color = 'black'
         self.__line_width = 1
         self.__orientation = 0
@@ -24,21 +25,26 @@ class Konna:
 
         self.drawSelf()
 
+        self.update_interval = update_interval
+        self.counter = 0
+
         # self.circle = Circle(self.position, 5)
 
     def drawSelf(self):
-        self.clearCircles()
+        self.__clearCircles()
         self.circle.draw(self.window)
         # self.update()
 
-    def clearCircles(self):
+    def __clearCircles(self):
         for i in self.window.items[:]:
             if isinstance(i, Circle):
                 i.undraw()
 
     def update(self):
-        self.window.update()
-        time.sleep(1 / self.framerate)
+        if not self.counter % self.update_interval:
+            self.window.update()
+            time.sleep(1 / self.framerate)
+        self.counter += 1
 
     def penDown(self):
         self.pen_down = True
@@ -56,8 +62,8 @@ class Konna:
 
             draw_start_pos = self.position
 
-            self.pos_x = pos_x_old + round(math.sin(math.radians(self.orientation)) * distance, 0)
-            self.pos_y = pos_y_old + round(math.cos(math.radians(self.orientation)) * distance, 0)
+            self.pos_x = pos_x_old + math.sin(math.radians(self.orientation)) * distance
+            self.pos_y = pos_y_old + math.cos(math.radians(self.orientation)) * distance
 
             draw_end_pos = self.position
 
@@ -67,8 +73,30 @@ class Konna:
             line.draw(self.window)
 
         else:
-            self.pos_x += round(math.sin(math.radians(self.orientation)) * distance, 0)
-            self.pos_y -= round(math.cos(math.radians(self.orientation)) * distance, 0)
+            self.pos_x += math.sin(math.radians(self.orientation)) * distance
+            self.pos_y -= math.cos(math.radians(self.orientation)) * distance
+
+        self.drawSelf()
+        self.update()
+
+    def goTo(self, x, y):
+        if self.pen_down:
+            line_start_pos = self.position
+
+            self.pos_x = x
+            self.pos_y = y
+
+            line_end_pos = self.position
+
+            line = Line(line_start_pos, line_end_pos)
+            line.setFill(self.line_color)
+            line.setWidth(self.__line_width)
+
+            line.draw(self.window)
+
+        else:
+            self.pos_x = x
+            self.pos_y = y
 
         self.drawSelf()
         self.update()
@@ -97,13 +125,17 @@ class Konna:
 
     @property
     def circle(self):
+        # position = self.position
+        # rounded_x = round(position.x, 0)
+        # rounded_y = round(position.y, 0)
+
         cir = Circle(self.position, 5)
         cir.setFill('black')
         return cir
 
     @property
     def position(self):
-        return Point(self.pos_x + self.__window_dim_x / 2, self.pos_y + self.__window_dim_y / 2)
+        return Point(round(self.pos_x, 0) + self.__window_dim_x / 2, round(self.pos_y, 0) + self.__window_dim_y / 2)
 
     @property
     def orientation(self):
@@ -152,6 +184,14 @@ class Konna:
                 self.__pos_y = (self.__window_dim_y / 2)
             else:
                 self.__pos_y = pos_y
+
+    @property
+    def window_dim_x(self):
+        return self.__window_dim_x
+
+    @property
+    def window_dim_y(self):
+        return self.__window_dim_y
 
     def __del__(self):
         self.window.close()

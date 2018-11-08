@@ -1,8 +1,9 @@
 import math
 import konna
 from graphics import Point, Rectangle
+import random
 
-a = konna.Konna(no_bounds=False, framerate=10000, window_dim_x=1000, window_dim_y=1000)
+a = konna.Konna(no_bounds=True, framerate=10, window_dim_x=1000, window_dim_y=1000)
 
 # print(a.__framerate, 'asd')
 
@@ -17,27 +18,77 @@ a.orientation = 0
 a.line_color = 'blue'
 a.line_width = 1
 
+def etäisyysNäytöllä(piste_1, piste_2):
+    pos_1_x, pos_1_y, pos_2_x, pos_2_y = 0, 0, 0, 0
 
-värit = ['red', 'orange', 'yellow', 'green', 'blue', 'red']#, 'purple']#, 'black']
+    if isinstance(piste_1, Point):
+        pos_1_x = piste_1.x
+        pos_1_y = piste_1.y
+    else:
+        pos_1_x = piste_1[0]
+        pos_1_y = piste_1[1]
 
-i = 10
+    if isinstance(piste_2, Point):
+        pos_2_x = piste_2.x
+        pos_2_y = piste_2.y
+    else:
+        pos_2_x = piste_2[0]
+        pos_2_y = piste_2[1]
 
-span = 500
+    pos_x_delta = abs(pos_2_x - pos_1_x)
+    pos_y_delta = abs(pos_2_y - pos_1_y)
 
-while KeyboardInterrupt:
-    i += 1
-    a.orientation += 89
+    return math.sqrt(pos_x_delta ** 2 + pos_y_delta ** 2)
 
-    # a.line_color = värit[i % len(värit)]
 
-    a.move(i)
+# print(etäisyysNäytöllä((4, 0), (10, 6)))
 
-    for c in range(len(värit)):
-        if (c - 1) * span < c * (i % span) < c * span:
-            a.line_color = värit[c]
+# quit()
 
-    # if i % 4 == 0:
-    #     a.jump(10, 10)
-    #
-    # if i % 3 == 0:
-    #     a.jump(-10, -10)
+kulmien_määrä = 10
+
+i = kulmien_määrä - 1
+
+kulmien_summa = (kulmien_määrä - 2) * 180
+
+kulma_1 = kulmien_summa / kulmien_määrä
+
+# kulmat = [kulma_1  for i in range(kulmien_määrä)]
+kulmat = []
+
+for i in range(kulmien_määrä):
+    temp = random.randint(kulma_1 / 2, 180)
+    kulmat.append(temp)
+
+
+vajaa = kulmien_summa - sum(kulmat)
+for i in range(len(kulmat)):
+
+    kulmat[i] += vajaa / kulmien_määrä
+
+kulmat = sorted(kulmat)
+kulmat = kulmat[::-1]
+
+
+sivut = [i for i in range(kulmien_määrä - 1, kulmien_määrä * 2 - 1)]
+
+print(len(kulmat))
+print(len(sivut))
+# quit()
+
+indeksi = 0
+while i <= 2 * kulmien_määrä - 2:
+    index = random.randint(0, len(kulmat) - 1)
+
+    sivu = sivut.pop(index)
+    kulma = kulmat.pop(index)
+
+    a.move(sivu)
+    a.orientation += 180 - kulma
+
+    indeksi += 1
+
+    # print(i)
+
+input()
+    # kulma =
